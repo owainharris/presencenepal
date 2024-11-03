@@ -18,7 +18,7 @@ export default function Hero() {
             Stay Connected 24/7 on Microsoft Teams
           </h1>
           <p className="mt-6 text-xl text-muted-foreground max-w-3xl mx-auto">
-            Never appear offline again. Our Windows application keeps your Teams status active, ensuring you're always available when it matters most.
+            Never appear offline again. Our Windows application keeps your Teams status active, ensuring you are always available when it matters most.
           </p>
           <div className="mt-10 flex justify-center gap-4">
             <Button size="lg" className="gap-2" onClick={() => scrollToSection('pricing')}>

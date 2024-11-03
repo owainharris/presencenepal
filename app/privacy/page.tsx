@@ -65,7 +65,7 @@ export default function PrivacyPolicy() {
             <section>
               <h2 className="text-xl font-semibold mb-4">6. Third-Party Services</h2>
               <p className="text-muted-foreground">
-                Our service integrates with Microsoft Teams. Please review Microsoft's privacy policy for information about how they handle your data.
+                Our service integrates with Microsoft Teams. Please review Microsofts privacy policy for information about how they handle your data.
               </p>
             </section>
 

@@ -8,34 +8,34 @@ import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Provider } from '@supabase/supabase-js';
+import Image from "next/image";
+
+// Update the type declaration
+type AuthProvider = 'azure' | Exclude<Provider, 'azure'>;
 
 export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleOAuthSignIn = async (provider: 'google' | 'github' | 'microsoft') => {
+  const handleOAuthSignIn = async (provider: AuthProvider) => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase.auth.signInWithOAuth({
-        provider,
+        provider: provider as Provider,
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-          scopes: provider === 'microsoft' ? 'offline_access' : undefined
+          redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+          queryParams: provider === 'azure' ? {
+            prompt: 'consent',
+            access_type: 'offline'
+          } : undefined,
         },
       });
 
-      if (error) {
-        console.error('Auth error:', error);
-        toast({
-          title: "Authentication Error",
-          description: error.message,
-          variant: "destructive",
-        });
-        return;
-      }
+      if (error) throw error;
 
-      if (data?.session) {
-        router.push('/dashboard');
+      if (data.url) {
+        window.location.href = data.url;
       }
       
     } catch (error) {
@@ -54,10 +54,13 @@ export default function AuthPage() {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md p-8">
         <div className="flex justify-center mb-8">
-          <img
+          <Image
             src="/presencepal-logo.png"
             alt="PresencePal"
-            className="w-16 h-16 object-contain"
+            width={64}
+            height={64}
+            className="object-contain"
+            priority
           />
         </div>
         <div className="text-center mb-8">
@@ -82,7 +85,7 @@ export default function AuthPage() {
           <Button
             variant="outline"
             className="w-full relative"
-            onClick={() => handleOAuthSignIn('microsoft')}
+            onClick={() => handleOAuthSignIn('azure')}
             disabled={isLoading}
           >
             <svg className="mr-2 h-4 w-4" viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg">
